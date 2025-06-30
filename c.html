@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hacked by Yuri08 - Pro Version</title>
+<meta name="description" content="Trang deface được thiết kế bởi hacker Yuri08 với hiệu ứng xịn sò, avatar, kỹ năng, nhạc nền và cảnh báo admin." />
+<link rel="icon" href="https://files.catbox.moe/755fgv.png" type="image/png" />
+
+<!-- Google font hacker style -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
+<style>
+  /* Reset & cơ bản */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body, html {
+    height: 100%;
+    font-family: 'Orbitron', sans-serif;
+    overflow: hidden;
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+  body.dark {
+    background: #0a0a0a;
+    color: #00ff99;
+  }
+  body.light {
+    background: #f5f5f5;
+    color: #006633;
+  }
+  /* Canvas nền */
+  #bgCanvas, #snowCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+  #bgCanvas { z-index: 0; }
+  #snowCanvas { z-index: 1; }
+
+  /* Container chính */
+  .main {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    text-align: center;
+    padding: 0 20px;
+  }
+  /* Hiệu ứng chữ gradient glitch */
+  h1 {
+    font-size: 5rem;
+    letter-spacing: 0.3em;
+    background: linear-gradient(270deg, #00ff99, #00ffff, #ff00ff, #00ff99);
+    background-size: 800% 800%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 15s ease infinite, glitch 3s infinite;
+    user-select: none;
+  }
+  @keyframes gradientShift {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+  }
+  @keyframes glitch {
+    0%, 100% {
+      text-shadow:
+        2px 0 red,
+        -2px 0 cyan;
+    }
+    50% {
+      text-shadow:
+        -2px 0 red,
+        2px 0 cyan;
+    }
+  }
+
+  /* Avatar góc trái */
+  .avatar-wrapper {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    width: 120px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px #00ff99aa;
+    background: #111;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+    z-index: 15;
+  }
+  .avatar-wrapper:hover {
+    box-shadow: 0 0 40px #00ff99ee;
+  }
+  .avatar-wrapper img {
+    width: 100%;
+    display: block;
+  }
+  .skills {
+    background: rgba(0,255,153,0.1);
+    border: 1px solid #00ff99;
+    border-radius: 12px;
+    margin-top: 8px;
+    padding: 8px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #00ff99dd;
+    display: none;
+    user-select: none;
+  }
+  .avatar-wrapper:hover .skills {
+    display: block;
+  }
+
+  /* Nút nhạc */
+  #musicToggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(0,255,153,0.15);
+    border: 1px solid #00ff99;
+    color: #00ff99;
+    font-weight: 700;
+    font-family: monospace;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 15;
+    transition: background 0.3s ease;
+  }
+  #musicToggle:hover {
+    background: rgba(0,255,153,0.35);
+  }
+
+  /* Nút toggle dark/light */
+  #modeToggle {
+    position: fixed;
+    bottom: 30px;
+    right: 150px;
+    background: rgba(0,255,153,0.15);
+    border: 1px solid #00ff99;
+    color: #00ff99;
+    font-weight: 700;
+    font-family: monospace;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 15;
+    transition: background 0.3s ease;
+  }
+  #modeToggle:hover {
+    background: rgba(0,255,153,0.35);
+  }
+
+  /* Marquee cảnh báo admin */
+  .marquee {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0,255,153,0.2);
+    color: #00ff99;
+    font-weight: 700;
+    padding: 8px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    z-index: 20;
+    user-select: none;
+  }
+  .marquee span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marqueeAnim 15s linear infinite;
+  }
+  @keyframes marqueeAnim {
+    0% {transform: translateX(0);}
+    100% {transform: translateX(-100%);}
+  }
+
+  /* Social links góc phải trên */
+  .social-links {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 15;
+  }
+  .social-links a {
+    color: #00ff99;
+    text-decoration: none;
+    font-size: 1.3rem;
+    border: 2px solid #00ff99;
+    padding: 6px 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  .social-links a:hover {
+    background: #00ff9977;
+  }
+  .social-links img {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Popup cảnh báo */
+  #popupWarning {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    background: #000c;
+    border: 2px solid #00ff99;
+    color: #00ff99;
+    padding: 30px 40px;
+    border-radius: 20px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    z-index: 50;
+    user-select: none;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  #popupWarning.hide {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    pointer-events: none;
+  }
+  #popupWarning button {
+    margin-top: 20px;
+    background: #00ff99;
+    border: none;
+    color: #000;
+    padding: 10px 20px;
+    font-weight: 700;
+    border-radius: 15px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s ease;
+  }
+  #popupWarning button:hover {
+    background: #00cc77;
+  }
+
+  /* Responsive cơ bản */
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 0.2em;
+    }
+    .avatar-wrapper {
+      width: 90px;
+      top: 15px; left: 15px;
+    }
+    .skills {
+      font-size: 0.8rem;
+    }
+    .social-links {
+      top: 15px;
+      right: 15px;
+      gap: 8px;
+    }
+    #musicToggle, #modeToggle {
+      bottom: 15px;
+      right: auto;
+      left: 15px;
+      margin-bottom: 10px;
+      width: calc(50% - 20px);
+      font-size: 0.9rem;
+      padding: 8px;
+    }
+    #modeToggle {
+      left: calc(50% + 5px);
+    }
+  }
+</style>
+</head>
+<body class="dark">
+
+<!-- Canvas chấm nền -->
+<canvas id="bgCanvas"></canvas>
+<!-- Canvas bông tuyết -->
+<canvas id="snowCanvas"></canvas>
+
+<div class="main">
+  <h1 aria-label="Hacked by Yuri08">HACKED BY YURI08</h1>
+</div>
+
+<!-- Avatar + skills -->
+<div class="avatar-wrapper" tabindex="0" aria-describedby="skillsDesc" aria-label="Avatar hacker Yuri08">
+  <img src="https://files.catbox.moe/755fgv.png" alt="Avatar Yuri08" />
+  <div class="skills" id="skillsDesc" role="region" aria-live="polite">
+    <strong>Kỹ năng:</strong><br/>
+    - Hack web siêu đẳng cấp<br/>
+    - Tấn công DDoS cực mạnh<br/>
+    - Social engineering thành thạo<br/>
+    - Thoát khỏi hệ thống an toàn
+  </div>
+</div>
+
+<!-- Nút bật/tắt nhạc -->
+<button id="musicToggle" aria-pressed="true" aria-label="Bật hoặc tắt nhạc nền">Nhạc: Bật 🔊</button>
+<!-- Nút đổi chế độ sáng/tối -->
+<button id="modeToggle" aria-pressed="true" aria-label="Chuyển đổi chế độ sáng tối">Chế độ: Tối 🌙</button>
+
+<!-- Social links -->
+<div class="social-links" aria-label="Liên kết mạng xã hội">
+  <a href="https://github.com/yuri08loveelaina" target="_blank" rel="noopener" aria-label="GitHub">
+    <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub icon" /> GitHub
+  </a>
+  <a href="https://www.linkedin.com/in/yuri08" target="_blank" rel="noopener" aria-label="LinkedIn">
+    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn icon" /> LinkedIn
+  </a>
+</div>
+
+<!-- Thanh cảnh báo admin -->
+<div class="marquee" role="alert" aria-live="assertive" aria-atomic="true">
+  <span>⚠️ ADMIN ĐỪNG QUÊN KIỂM TRA BẢO MẬT NGAY! WEBSITE ĐÃ BỊ HACK ⚠️</span>
+</div>
+
+<!-- Popup cảnh báo admin -->
+<div id="popupWarning" role="alertdialog" aria-modal="true" aria-labelledby="popupTitle" aria-describedby="popupDesc">
+  <div id="popupTitle">⚠️ CẢNH BÁO ADMIN ⚠️</div>
+  <div id="popupDesc">Website này đã bị xâm nhập. Vui lòng kiểm tra hệ thống và nâng cấp bảo mật ngay lập tức!</div>
+  <button id="closePopup" aria-label="Đóng cảnh báo">Đóng</button>
+</div>
+
+<!-- Nhạc nền -->
+<audio id="backgroundMusic" src="https://cdn.pixabay.com/download/audio/2022/08/23/audio_15a4b2390a.mp3?filename=dark-techno-15340.mp3" loop></audio>
+
+<script>
+  // Dark/Light toggle
+  const body = document.body;
+  const modeToggle = document.getElementById('modeToggle');
+  modeToggle.addEventListener('click', () => {
+    if(body.classList.contains('dark')) {
+      body.classList.replace('dark', 'light');
+      modeToggle.textContent = 'Chế độ: Sáng ☀️';
+      modeToggle.setAttribute('aria-pressed', 'false');
+    } else {
+      body.classList.replace('light', 'dark');
+      modeToggle.textContent = 'Chế độ: Tối 🌙';
+      modeToggle.setAttribute('aria-pressed', 'true');
+    }
+  });
+
+  // Nhạc nền bật tắt
+  const musicToggle = document.getElementById('musicToggle');
+  const bgMusic = document.getElementById('backgroundMusic');
+  bgMusic.volume = 0.2;
+  bgMusic.play().catch(() => {
+    // Nếu trình duyệt chặn auto play thì không sao
+  });
+
+  musicToggle.addEventListener('click', () => {
+    if(bgMusic.paused) {
+      bgMusic.play();
+      musicToggle.textContent = 'Nhạc: Bật 🔊';
+      musicToggle.setAttribute('aria-pressed', 'true');
+      clickSound.play();
+    } else {
+      bgMusic.pause();
+      musicToggle.textContent = 'Nhạc: Tắt 🔇';
+      musicToggle.setAttribute('aria-pressed', 'false');
+      clickSound.play();
+    }
+  });
+
+  // Âm thanh click cho nút và avatar
+  const clickSound = new Audio('https://actions.google.com/sounds/v1/ui/click.ogg');
+  const avatarWrapper = document.querySelector('.avatar-wrapper');
+  avatarWrapper.addEventListener('mouseenter', () => {
+    const hoverSound = new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg');
+    hoverSound.volume = 0.3;
+    hoverSound.play();
+  });
+  musicToggle.addEventListener('click', () => clickSound.play());
+  modeToggle.addEventListener('click', () => clickSound.play());
+
+  // Popup cảnh báo admin
+  const popup = document.getElementById('popupWarning');
+  const closePopupBtn = document.getElementById('closePopup');
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      popup.classList.remove('hide');
+    }, 800);
+  });
+  closePopupBtn.addEventListener('click', () => {
+    popup.classList.add('hide');
+  });
+
+  // Hiệu ứng nền dots
+  const bgCanvas = document.getElementById('bgCanvas');
+  const ctx = bgCanvas.getContext('2d');
+  let w, h;
+  function resizeCanvas() {
+    w = bgCanvas.width = window.innerWidth;
+    h = bgCanvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  class Dot {
+    constructor() {
+      this.x = Math.random() * w;
+      this.y = Math.random() * h;
+      this.radius = Math.random() * 2 + 1;
+      this.speed = 0.3 + Math.random() * 0.5;
+      this.dir = Math.random() > 0.5 ? 1 : -1;
+      this.alpha = 0.1 + Math.random() * 0.4;
+    }
+    update() {
+      this.x += this.speed * this.dir;
+      if(this.x > w) this.x = 0;
+      if(this.x < 0) this.x = w;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 255, 153, )`;
+      ctx.fill();
+    }
+  }
+
+  const dots = [];
+  for(let i=0; i<150; i++) {
+    dots.push(new Dot());
+  }
+  function animateDots() {
+    ctx.clearRect(0, 0, w, h);
+    dots.forEach(dot => {
+      dot.update();
+      dot.draw();
+    });
+    requestAnimationFrame(animateDots);
+  }
+  animateDots();
+
+  // Bông tuyết rơi
+  const snowCanvas = document.getElementById('snowCanvas');
+  const snowCtx = snowCanvas.getContext('2d');
+  let sw, sh;
+  function snowResize() {
+    sw = snowCanvas.width = window.innerWidth;
+    sh = snowCanvas.height = window.innerHeight;
+  }
+  snowResize();
+  window.addEventListener('resize', snowResize);
+
+  class Snowflake {
+    constructor() {
+      this.x = Math.random() * sw;
+      this.y = Math.random() * sh;
+      this.radius = Math.random() * 3 + 1;
+      this.speed = Math.random() * 1 + 0.5;
+      this.angle = Math.random() * Math.PI * 2;
+    }
+    update() {
+      this.y += this.speed;
+      this.x += Math.sin(this.angle) * 0.5;
+      this.angle += 0.01;
+      if(this.y > sh) {
+        this.y = 0;
+        this.x = Math.random() * sw;
+      }
+    }
+    draw() {
+      snowCtx.beginPath();
+      snowCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      snowCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      snowCtx.fill();
+    }
+  }
+  const snowflakes = [];
+  for(let i=0; i<100; i++) {
+    snowflakes.push(new Snowflake());
+  }
+  function snowAnimate() {
+    snowCtx.clearRect(0, 0, sw, sh);
+    snowflakes.forEach(flake => {
+      flake.update();
+      flake.draw();
+    });
+    requestAnimationFrame(snowAnimate);
+  }
+  snowAnimate();
+
+  // Hiệu ứng di chuyển theo chuột cho tiêu đề
+  const mainTitle = document.querySelector('h1');
+  window.addEventListener('mousemove', e => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const offsetX = (e.clientX - centerX) / centerX;
+    const offsetY = (e.clientY - centerY) / centerY;
+    mainTitle.style.transform = `translate(px, px)`;
+  });
+</script>
+</body>
